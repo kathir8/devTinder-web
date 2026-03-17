@@ -9,17 +9,30 @@ const Login = () => {
 
   const [emailId, setEmailId] = useState('akshay@gmail.com');
   const [password, setPassword] = useState('Akshay@123');
+  const [error, setError] = useState('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+
+    validateLogin();
+    if (error) return;
     try {
       const res = await axios.post(`${BASE_URL}/login`, { emailId, password }, { withCredentials: true });
       dispatch(addUser(res.data));
       return navigate('/');
     } catch (err) {
+      setError(err.response?.data || "Login failed. Please try again.");
       console.log(err);
     }
+  }
+
+  const validateLogin = () => {
+    if (!emailId || !password) {
+      setError("Email and password are required.");
+      return;
+    }
+    setError('');
   }
 
   return (
@@ -40,6 +53,7 @@ const Login = () => {
                 value={password} onChange={(e) => setPassword(e.target.value)} />
             </fieldset>
           </div>
+          {error && <p className="text-red-500">{error}</p>}
           <div className="card-actions justify-center">
             <div className="btn btn-primary" onClick={handleLogin}>Login</div>
           </div>
