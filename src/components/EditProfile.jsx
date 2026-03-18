@@ -73,7 +73,6 @@ const EditProfile = ({ user }) => {
                                         value={about} onChange={(e) => setAbout(e.target.value)} />
                                 </fieldset>
                             </div>
-                            {/* {error && <p className="text-red-500">{error}</p>} */}
                             <div className="card-actions justify-center">
                                 <div className="btn btn-primary" onClick={saveProfile}>Save profile</div>
                             </div>
