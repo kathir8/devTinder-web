@@ -1,9 +1,9 @@
 import axios from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
 
@@ -23,7 +23,7 @@ const Login = () => {
       return navigate('/');
     } catch (err) {
       setError(err.response?.data || "Login failed. Please try again.");
-      console.log(err);
+      console.error(err);
     }
   }
 

@@ -1,5 +1,5 @@
 
-const UserCard = ({ user }) => {
+const UserCard = ({ user, fromProfile }) => {
     const { firstName, lastName, about, profileImage, age, gender } = user;
     return (
         <div className="card bg-base-300 w-96 shadow-sm">
@@ -12,10 +12,10 @@ const UserCard = ({ user }) => {
                 <h2 className="card-title">{firstName + ' ' + lastName}</h2>
                 {age && gender && <p>{age}, {gender}</p>}
                 <p>{about || "A card component has a figure, a body part, and inside body there are title and actions parts"}</p>
-                <div className="card-actions justify-end">
+                {!fromProfile && <div className="card-actions justify-end">
                     <div className="btn btn-primary">Ignore</div>
                     <div className="btn btn-secondary">Interested</div>
-                </div>
+                </div>}
             </div>
         </div>
     )
