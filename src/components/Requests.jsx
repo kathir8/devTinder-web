@@ -2,13 +2,24 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { addRequests } from "../utils/requestSlice";
+import { addRequests, removeRequest } from "../utils/requestSlice";
 
 const Requests = () => {
 
   const dispatch = useDispatch();
 
   const requests = useSelector((state) => state.requests);
+
+  const reviewRequest = async (status, _id) => {
+
+    try {
+      const res = await axios.patch(`${BASE_URL}/request/review/${status}/${_id}`, {}, { withCredentials: true });
+      dispatch(removeRequest(_id));
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
 
   const fetchRequests = async () => {
@@ -29,17 +40,17 @@ const Requests = () => {
 
   if (!requests) return null;
 
-  if (requests.length === 0) return <h1> No Requests found</h1>
+  if (requests.length === 0) return <h1 className="flex justify-center my-10"> No Requests found</h1>
 
   return (
     <div className="text-center my-10">
       <h1 className="font-bold text-white text-3xl">Requests</h1>
       {requests.map((request) => {
 
-        const { firstName, lastName, photoUrl, age, gender, about, _id } = request.fromUserId;
+        const { firstName, lastName, photoUrl, age, gender, about } = request.fromUserId;
 
         return (
-          <div key={_id} className="flex justify-between items-center m-4 p-4 border rounded-lg bg-base-300 w-1/2 mx-auto">
+          <div key={request._id} className="flex justify-between items-center m-4 p-4 border rounded-lg bg-base-300 w-1/2 mx-auto">
             <div>
               <img src={photoUrl || "https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"} alt="profile" className="w-20 h-20 rounded-full object-cover" />
             </div>
@@ -49,13 +60,11 @@ const Requests = () => {
               <p>{about}</p>
             </div>
             <div>
-              <div className="btn btn-primary mx-2">Reject</div>
-              <div className="btn btn-secondary mx-2">Accept</div>
+              <div className="btn btn-primary mx-2" onClick={() => reviewRequest('rejected', request._id)}>Reject</div>
+              <div className="btn btn-secondary mx-2" onClick={() => reviewRequest('accepted', request._id)}>Accept</div>
             </div>
           </div>
         )
-
-
       })}
     </div>
   )
